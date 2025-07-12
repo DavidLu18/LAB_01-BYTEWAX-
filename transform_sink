@@ -1,0 +1,31 @@
+binance_ws_to_sqlite.py -> rewrite
+
+0. Send to kafka topic "ohlcv.raw" (code python/go)
+{
+"stream":"btcusdt@kline_1s",
+"data":{"e":"kline","E":1751508654024,"s":"BTCUSDT",
+"k":
+{"t":1751508653000,"T":1751508653999,
+"s":"BTCUSDT","i":"1s","f":5060115165,"L":5060115167,
+"o":"108810.02000000",
+"c":"108810.03000000",
+"h":"108810.03000000",
+"l":"108810.02000000",
+"v":"0.00528000","n":3,"x":true,"q":"574.51695650","V":"0.00509000","Q":"553.84305270","B":"0"}}}
+
+
+1. Transform: time, open, high, low, close, volume json (template)
+-> send kafka topic "ohlcv.processed"
+
+
+2. Sink: topic "ohlcv.processed" into Postgresql (template)
+CREATE TABLE IF NOT EXISTS ohlcv (
+    time timestamp NOT NULL,
+    symbol TEXT,
+    open NUMERIC,
+    high NUMERIC,
+    low NUMERIC,
+    close NUMERIC,
+    volume NUMERIC,
+    PRIMARY KEY (symbol, time)
+);

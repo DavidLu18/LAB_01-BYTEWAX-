@@ -1,0 +1,24 @@
+Task: message.json -> kafka -> transform -> kafka -> DB
+** Pipeline 1:
+1. DNSE
+script python send to kafka
+read message.json -> for each message -> kafka (key, value) 
+topic: dnse.raw
+key: key.payload
+value: value.payload
+
+2. Transform
+dnse_filter.rb
+
+3. Send transformed to kafka topic
+topic: dnse.transform
+
+
+** Pipeline 2
+1. Read kafka dnse.transform
+2. Sink DB
+sink_snapshot.conf 
+
+
+=> Bytewax
+
